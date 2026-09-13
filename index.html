@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dhanda AI Marketing & CRM</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --success: #16a34a;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background: var(--bg); color: var(--text); display: flex; flex-direction: column; min-height: 100vh; }
+    
+    header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 14px 16px; position: sticky; top: 0; z-index: 10; display: flex; justify-content: space-between; align-items: center; }
+    header h1 { font-size: 1.1rem; color: var(--primary); font-weight: 700; }
+    header span { font-size: 0.75rem; background: #dbeafe; color: var(--primary-dark); padding: 3px 8px; border-radius: 12px; font-weight: 600; }
+
+    main { flex: 1; padding: 16px; max-width: 600px; margin: 0 auto; width: 100%; padding-bottom: 80px; }
+
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+    .card h2 { font-size: 1rem; margin-bottom: 12px; color: var(--text); display: flex; align-items: center; gap: 8px; }
+
+    label { display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 4px; color: var(--text-muted); }
+    input, select, textarea { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.9rem; margin-bottom: 12px; outline: none; }
+    input:focus, select:focus, textarea:focus { border-color: var(--primary); }
+    
+    button { width: 100%; background: var(--primary); color: white; border: none; padding: 12px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.9rem; }
+    button:active { background: var(--primary-dark); }
+    
+    .output-box { background: #f1f5f9; border-radius: 8px; padding: 12px; font-size: 0.85rem; line-height: 1.5; white-space: pre-wrap; margin-top: 10px; border-left: 4px solid var(--primary); display: none; }
+    
+    .lead-item { border-bottom: 1px solid var(--border); padding: 10px 0; display: flex; justify-content: space-between; align-items: center; }
+    .lead-item:last-child { border-bottom: none; }
+    .lead-name { font-weight: 600; font-size: 0.9rem; }
+    .lead-sub { font-size: 0.75rem; color: var(--text-muted); }
+    .badge { font-size: 0.7rem; padding: 2px 6px; border-radius: 4px; background: #e0f2fe; color: #0369a1; }
+
+    /* Bottom Navigation */
+    nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--surface); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 8px 0; z-index: 20; }
+    .nav-btn { background: none; border: none; color: var(--text-muted); font-size: 0.75rem; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 4px; width: auto; font-weight: 500; }
+    .nav-btn.active { color: var(--primary); font-weight: 700; }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Dhanda AI Marketing</h1>
+    <span>100% Free CRM</span>
+  </header>
+
+  <main>
+    <!-- TAB 1: AI Content Generator -->
+    <section id="tab-ai" class="tab-content active">
+      <div class="card">
+        <h2>✨ AI Marketing Content Generator</h2>
+        <label>Aapka Business Type</label>
+        <input type="text" id="bizType" placeholder="e.g. Cloth Store, Salon, Hardware, Cafe">
+
+        <label>Campaign Goal</label>
+        <select id="campGoal">
+          <option value="festival">Festival Discount Offer</option>
+          <option value="new_launch">New Product Launch</option>
+          <option value="clearance">Clearance Stock Sale</option>
+          <option value="lead_followup">Customer Re-engagement</option>
+        </select>
+
+        <label>Discount / Special Offer Detail</label>
+        <input type="text" id="offerDetail" placeholder="e.g. Flat 20% OFF or Buy 1 Get 1">
+
+        <button onclick="generateAIContent()">Generate Marketing Copy</button>
+
+        <div id="aiOutput" class="output-box"></div>
+      </div>
+
+      <div class="card">
+        <h2>💬 Smart Review Reply</h2>
+        <label>Customer Review Type</label>
+        <select id="reviewRating">
+          <option value="5">5 Star - Happy Customer</option>
+          <option value="1">1-2 Star - Upset Customer</option>
+        </select>
+        <button onclick="generateReviewReply()">Get Instant Professional Reply</button>
+        <div id="reviewOutput" class="output-box"></div>
+      </div>
+    </section>
+
+    <!-- TAB 2: Lead CRM -->
+    <section id="tab-crm" class="tab-content">
+      <div class="card">
+        <h2>👤 New Customer Lead</h2>
+        <input type="text" id="leadName" placeholder="Customer Name">
+        <input type="tel" id="leadPhone" placeholder="Mobile Number">
+        <select id="leadStatus">
+          <option value="Interested">Interested</option>
+          <option value="Follow-up Needed">Follow-up Needed</option>
+          <option value="Closed Deal">Deal Closed</option>
+        </select>
+        <button onclick="saveLead()">Add to CRM</button>
+      </div>
+
+      <div class="card">
+        <h2>📋 Saved Leads (<span id="leadCount">0</span>)</h2>
+        <div id="leadsList">No leads added yet.</div>
+      </div>
+    </section>
+
+    <!-- TAB 3: Business Profile -->
+    <section id="tab-profile" class="tab-content">
+      <div class="card">
+        <h2>🏢 Business Settings</h2>
+        <label>Business Name</label>
+        <input type="text" id="myBizName" placeholder="Apni Dukaan / Business ka naam">
+        <label>City / Area</label>
+        <input type="text" id="myBizCity" placeholder="e.g. Aligarh, UP">
+        <button onclick="saveProfile()">Save Details</button>
+      </div>
+    </section>
+  </main>
+
+  <nav>
+    <button class="nav-btn active" onclick="switchTab('tab-ai', this)">⚡ AI Engine</button>
+    <button class="nav-btn" onclick="switchTab('tab-crm', this)">👥 Leads CRM</button>
+    <button class="nav-btn" onclick="switchTab('tab-profile', this)">⚙️ Profile</button>
+  </nav>
+
+  <script>
+    function switchTab(tabId, btn) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+      btn.classList.add('active');
+    }
+
+    function generateAIContent() {
+      const biz = document.getElementById('bizType').value.trim() || 'Hamaari Dukaan';
+      const goal = document.getElementById('campGoal').value;
+      const offer = document.getElementById('offerDetail').value.trim() || 'Bumper Chhoot';
+      const output = document.getElementById('aiOutput');
+
+      let copy = "";
+      if (goal === "festival") {
+        copy = `🎉 *Special Dhamaka Offer at ${biz}!* 🎉\n\nIs festival season paayein sabse behtareen deals! Hum laaye hain aapke liye:\n👉 *${offer}*\n\n✅ Best Quality & Trusted Service\n📍 Visit Karein Aaj Hi Ya WhatsApp Par Order Karein!\n📞 Abhi Message Karein aur Offer Claim Karein.`;
+      } else if (goal === "new_launch") {
+        copy = `🔥 *Naya Stock Aa Gaya Hai - ${biz}* 🔥\n\nAapke pasandida products ka fresh collection ab available hai!\nSpecial introductory benefit: *${offer}*\n\nJaldi karein, stock limited hai!`;
+      } else if (goal === "clearance") {
+        copy = `⚡ *STOCK CLEARANCE SALE - ${biz}* ⚡\n\nSabse sasti keemat me le jayein premium products!\n💥 Offer: *${offer}*\nSirf agle 3 din ke liye valid!`;
+      } else {
+        copy = `Namaste! Ji ${biz} se connect karne ke liye shukriya. Aapke liye ek special deal ready hai: *${offer}*. Kya hum aapki query solve kar sakte hain?`;
+      }
+
+      output.style.display = 'block';
+      output.innerText = copy;
+    }
+
+    function generateReviewReply() {
+      const rating = document.getElementById('reviewRating').value;
+      const output = document.getElementById('reviewOutput');
+      let text = "";
+
+      if (rating === "5") {
+        text = `Thank you so much for your wonderful feedback! Hamare liye aapka satisfaction sabse important hai. Umeed hai aap jald hi dubara visit karenge! 😊`;
+      } else {
+        text = `Hamein behad khed hai ki aapka experience achha nahi raha. Kripya apna contact number share karein ya humse direct connect karein taaki hum is kami ko turant theek kar sakein. Aapka feedback hamare liye zaroori hai.`;
+      }
+
+      output.style.display = 'block';
+      output.innerText = text;
+    }
+
+    function saveLead() {
+      const name = document.getElementById('leadName').value.trim();
+      const phone = document.getElementById('leadPhone').value.trim();
+      const status = document.getElementById('leadStatus').value;
+      if (!name || !phone) { alert('Naam aur Phone number bharein'); return; }
+
+      const leads = JSON.parse(localStorage.getItem('dhanda_leads') || '[]');
+      leads.unshift({ name, phone, status, date: new Date().toLocaleDateString() });
+      localStorage.setItem('dhanda_leads', JSON.stringify(leads));
+
+      document.getElementById('leadName').value = '';
+      document.getElementById('leadPhone').value = '';
+      loadLeads();
+    }
+
+    function loadLeads() {
+      const leads = JSON.parse(localStorage.getItem('dhanda_leads') || '[]');
+      const container = document.getElementById('leadsList');
+      document.getElementById('leadCount').innerText = leads.length;
+
+      if (leads.length === 0) {
+        container.innerHTML = `<p style="font-size: 0.85rem; color: #94a3b8;">No leads saved.</p>`;
+        return;
+      }
+
+      container.innerHTML = leads.map(l => `
+        <div class="lead-item">
+          <div>
+            <div class="lead-name">${l.name}</div>
+            <div class="lead-sub">${l.phone} • ${l.date}</div>
+          </div>
+          <span class="badge">${l.status}</span>
+        </div>
+      `).join('');
+    }
+
+    function saveProfile() {
+      const bizName = document.getElementById('myBizName').value;
+      const city = document.getElementById('myBizCity').value;
+      localStorage.setItem('dhanda_profile', JSON.stringify({ bizName, city }));
+      alert('Profile details saved!');
+    }
+
+    window.onload = function() {
+      loadLeads();
+      const prof = JSON.parse(localStorage.getItem('dhanda_profile') || '{}');
+      if (prof.bizName) document.getElementById('myBizName').value = prof.bizName;
+      if (prof.city) document.getElementById('myBizCity').value = prof.city;
+    };
+  </script>
+</body>
+</html>
